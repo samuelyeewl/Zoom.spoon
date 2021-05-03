@@ -150,8 +150,14 @@ zoom_state_watcher = nil
 app_watcher = hs.application.watcher.new(function(appName, eventType, appObject)
     -- hs.printf('examining internal events %s', eventType)
     if (appName == ZOOM_APP_NAME) then
-        _start_zoom_state_watcher(appObject)
-        -- hs.printf('zoom state machine current %s', Zoom_State.current)
+        if (eventType == hs.application.watcher.launched) then
+            _start_zoom_state_watcher(appObject)
+            hs.printf('zoom state watcher started')
+            -- hs.printf('zoom state machine current %s', Zoom_State.current)
+        elseif (eventType == hs.application.watcher.terminated) then
+            _stop_zoom_state_watcher()
+            hs.printf('zoom state watcher closed')
+        end
     end
 end)
 
